@@ -1,0 +1,37 @@
+*{margin: 0;padding: 0}
+#dv1{
+    width: 350px;
+    height:250px;
+    background: blue; 
+    display: flex;
+}
+#dv2{
+    width: 250px;
+    height: 150px;
+    background: yellow; 
+}
+#dv3{
+    width: 150px;
+    height: 50px;
+    background: green; 
+}
+#txt{
+    width: 200px;
+    height: 20px;
+    color: grey;
+    border-radius: 3px;
+}
+#dv{
+    width: 200px;
+    border: 1px solid black;
+    font-size: 12px;
+    cursor: pointer;/*当鼠标进入区域变成小手*/
+}
+#dv7{
+  border: 1px solid red;
+  position: absolute;
+}
+#m1,#m2{
+    width: 150px;
+    height: 150px;  
+}   

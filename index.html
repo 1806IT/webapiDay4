@@ -1,0 +1,155 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <link rel="stylesheet" href="./style.css">
+    
+</head>
+
+<body>
+    <input type="button" value="按钮" id='b1'>
+    <input type="button" value='解绑2按钮' id='b2'>
+    <input type="button" value='绑定2' id='b3'>
+    <input type="button" value='显示效果' id='b4'>
+    <br>
+    <div id="box">
+        <input type="text" value="请输入" id='txt'>
+        <input type="button" value='搜索' id='b5'>
+        <input type="button" value='停止计时器1' id='b6'>
+    </div>
+
+    <div id='dv1'>
+        <div id="dv2">
+            <div id="dv3"></div>
+        </div>
+    </div>
+    <input type="button" value="摇起来" id="b7">
+    <input type="button" value="停止" id="b8">
+    <div id="dv7">
+        <img src="./1.jpg" alt="connans" id='m1'>
+        <img src="./2.jpg" alt="lan" id="m2">
+    </div>
+    <div id="x">
+    </div>
+   
+    <script src="./commoms.js"></script>
+    <script>
+
+        //为元素绑定事件  
+        //方法1：  对象.addEventListener('事件的类型',对事件处理函数,false)     IE11、谷歌和火狐支持
+        //参数1:事件的类型---事件的名字，没有on
+        //参数2:对事件处理函数---函数
+        //参数3:布尔类型，用于控制事件阶段，通过对象。eventPhase这个属性可以知道
+        //当前的事件是什么阶段，一般默认冒泡阶段，很少用捕获阶段
+        //事件触发的过程中，可能会出现事件冒泡效果，为了阻止事件冒泡
+        //为同一个元素绑定多个事件
+        my$('b1').addEventListener('click', function () {
+            console.log('绑定1')
+        }, false)
+        my$('b1').addEventListener('click', function () {
+            console.log('绑定2')
+        }, false)
+        my$('b1').addEventListener('click', function () {
+            console.log('绑定3')
+        }, false)
+
+        //方法二：  对象.attchEvent（参数1，参数2）
+        //参数1: 事件类型--事件名称，有on
+        //参数2，事件处理函数   IE8支持，其他不支持
+        /*my$('b1').attachEvent('onclick', function () {
+               console.log('绑定4')
+           })*/
+        //区别：方法名不一样，参数数不一样，支持的的浏览器不同，this不同，第一种方法绑定的是当前绑定的对象，事件没有on
+        //第二种是window，第二种有on
+        //解绑,第一种方式：用什么方式绑定绑定事件，就应该用对象的方式解绑时间
+        my$('b3').onclick = function () {
+            console.log('2事件')
+        }
+        my$('b2').onclick = function () {
+            my$('b3').onclick = null
+        }
+        //第二种方式  支持谷歌、火狐
+        //  对象.addEventListener('没有on事件的类型', 命名函数, false) 
+        //  对象.removeEventListener('没有on事件的类型', 命名函数, false) 
+        //第三种方式   支持IE8
+        //  对象.attachEvent('有on事件的类型', 命名函数) 
+        //  对象.detachEvent('有on事件的类型', 命名函数)         
+        //封装，解决兼容性问题，兼容代码
+        //绑定事件的兼容
+        function addEventListener(element, type, fn) {
+            if (element.addEventListener) {
+                element.addEventListener(type, fn, false)
+            } else if (element.attachEvent) {
+                element.attachEvent('on' + type, fn)
+            } else {
+                element['on' + type] = fn
+            }
+        }
+        //解绑事件兼容
+        function removeEventListener(element, type, fn) {
+            if (element.removeEventListener) {
+                element.removeEventListener(type, fn, false)
+            } else if (element.detachEvent) {
+                element.detachEvent('on' + type, fn)
+            } else {
+                element['on' + type] = null;
+            }
+        }
+        //事件冒泡：多个元素嵌套，有层次关系，这些标签都注册了相同的事件，如果里面的元素事件出发了，外面的元素的该事件自动触发了
+        //阻止事件冒泡：
+        /*function f1(){
+            console.log(this)
+            console.log(this.id)
+            console.log('printed')  找出不能调用f1()问题
+        }
+        my$('dv1').onclick = f1()
+        my$('dv1').onclick = function () {
+            console.log(this.id)
+            console.log(this)
+        }
+
+        my$('dv2').onclick = function (aa) {
+            console.log(this.id)
+            window.event.cancelBubble = true
+            //阻止冒泡事件发生,这种写法支持谷歌和IE，不支持火狐
+            //window.event是事件参数对象
+        }
+        my$('dv3').onclick = function (e) {
+            console.log(this.id)
+            e.stopPropagation()
+            //阻止冒泡事件发生,这种写法支持谷歌和火狐，不支持IE
+            //e是事件参数对象
+        }*/
+        //同时注册点击事件
+        var objs = [my$('dv3'), my$('dv2'), my$('dv1')]
+        objs.forEach(function (ele) {
+            //为每个元素绑定事件
+            ele.addEventListener('click', function (e) {
+                console.log(this.id + '====>' + e.eventPhase)
+            }, false)
+        })
+        //为同一元素绑定多个不同的事件，指向相同的事件处理函数
+        my$('b4').onclick = f2
+        my$('b4').onmouseover = f2
+        my$('b4').onmouseout = f2
+        function f2(e) {
+            switch (e.type) {
+                case "click":
+                    alert('点击的');
+                    break;
+                case 'mouseout':
+                    this.style.backgroundColor = 'red';
+                    break;
+                case 'mouseover':
+                    this.style.backgroundColor = 'green';
+                    break;
+            }
+        }
+    </script>
+</body>
+
+</html>
